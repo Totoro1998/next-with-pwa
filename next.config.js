@@ -1,5 +1,3 @@
-const runtimeCaching = require("next-pwa/cache");
-
 // Configuration options for Next.js
 const nextConfig = {
   reactStrictMode: true, // Enable React strict mode for improved error handling
@@ -13,7 +11,6 @@ const nextConfig = {
 const withPWA = require("next-pwa")({
   dest: "public", // Destination directory for the PWA files
   disable: process.env.NODE_ENV === "development", // Disable PWA in development mode
-  runtimeCaching,
   exclude: [/app-build-manifest.json/],
   // buildExcludes: [
   //   /chunks\/images\/.*$/, // Don't precache files under .next/static/chunks/images this improves next-optimized-images behaviour
