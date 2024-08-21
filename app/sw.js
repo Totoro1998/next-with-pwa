@@ -1,6 +1,27 @@
-import { clientsClaim } from "workbox-core";
+import { defaultCache } from "@serwist/next/worker";
+import { Serwist } from "serwist";
+
+// import { clientsClaim } from "workbox-core";
 // import { initializeApp } from "firebase/app";
 // import { getMessaging } from "firebase/messaging/sw";
+
+const serwist = new Serwist({
+  precacheEntries: self.__SW_MANIFEST,
+  skipWaiting: true,
+  clientsClaim: true,
+  navigationPreload: true,
+  runtimeCaching: defaultCache,
+  fallbacks: {
+    entries: [
+      {
+        url: "/~offline",
+        matcher({ request }) {
+          return request.destination === "document";
+        },
+      },
+    ],
+  },
+});
 
 // // Initialize the Firebase app in the service worker by passing in
 // // your app's Firebase config object.
@@ -45,7 +66,7 @@ const CACHE_NAME = "my-pwa-cache-v1";
 const urlsToCache = ["/", "/index.html", "/style.css", "/app.js", "/manifest.json"];
 
 self.addEventListener("install", (event) => {
-  self.skipWaiting(); // 使新的 Service Worker 立即进入激活状态
+  //   self.skipWaiting(); // 使新的 Service Worker 立即进入激活状态
 });
 
 self.addEventListener("fetch", (event) => {});
@@ -79,16 +100,19 @@ self.addEventListener("notificationclick", (event) => {
   }
 });
 
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-});
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    (async () => {
-      console.log("clientsClaim", clientsClaim);
-      await clientsClaim(); // 1111立即接管所有控制的页面
-    })()
-  );
-});
+// self.addEventListener("message", (event) => {
+//   if (event.data && event.data.type === "SKIP_WAITING") {
+//     self.skipWaiting();
+//   }
+// });
+
+// self.addEventListener("activate", (event) => {
+//   event.waitUntil(
+//     (async () => {
+//       console.log("clientsClaim", clientsClaim);
+//       await clientsClaim(); // 1111立即接管所有控制的页面
+//     })()
+//   );
+// });
+
+serwist.addEventListeners();

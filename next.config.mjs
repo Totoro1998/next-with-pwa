@@ -1,7 +1,4 @@
-const path = require("path");
-const runtimeCaching = require("next-pwa/cache");
-// const currentModuleUrl = new URL(import.meta.url);
-// const currentModuleDir = path.dirname(currentModuleUrl.pathname);
+import withSerwistInit from "@serwist/next";
 
 // Configuration options for Next.js
 const nextConfig = {
@@ -12,9 +9,7 @@ const nextConfig = {
     loader: "custom",
     loaderFile: "./lib/loader.js",
   },
-  // sassOptions: {
-  //   includePaths: [path.join(currentModuleDir, "styles")],
-  // },
+
   reactStrictMode: false,
   webpack(config, context) {
     // Grab the existing rule that handles SVG imports
@@ -54,31 +49,10 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV !== "development", // Remove console.log in production
   },
 };
-
-// Configuration object tells the next-pwa plugin
-const withPWA = require("next-pwa")({
-  dest: "public", // Destination directory for the PWA files
-  // disable: process.env.NODE_ENV === "development", // Disable PWA in development mode
-  // runtimeCaching,
-  // exclude: [/app-build-manifest.json/],
-  // buildExcludes: [
-  //   /chunks\/images\/.*$/, // Don't precache files under .next/static/chunks/images this improves next-optimized-images behaviour
-  //   /chunks\/pages\/api\/.*/, // Dont cache the API it needs fresh serverinfo
-  // ],
-  // exclude: [
-  //   /\.map$/, // dont cache map files
-  //   /^.*ts.*$/, // Dont let serviceworker touch the TS streams
-  //   /-manifest.json$/, // exclude those pesky json files in _next root but still serve the ones we need from /_next/static
-  // ],
-  register: false, // Register the PWA service worker
-  skipWaiting: true, // Skip waiting for service worker activation
-  // fallbacks: {
-  //   document: "/offline",
-  // },
-  cacheOnFrontEndNav: true,
-  reloadOnOnline: true,
-  // extendDefaultRuntimeCaching: true,
+const withSerwist = withSerwistInit({
+  // Note: This is only an example. If you use Pages Router,
+  // use something else that works, such as "service-worker/index.ts".
+  swSrc: "app/sw.js",
+  swDest: "public/sw.js",
 });
-
-// Export the combined configuration for Next.js with PWA support
-module.exports = withPWA(nextConfig);
+export default withSerwist(nextConfig);
