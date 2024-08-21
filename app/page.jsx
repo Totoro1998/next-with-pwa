@@ -24,64 +24,12 @@ export default function Home() {
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
-      // navigator.serviceWorker
-      //   .register("./firebase-messaging-sw.js")
-      //   .then(function (registration) {
-      //     console.log("Registration successful, scope is:", registration.scope);
-      //   })
-      //   .catch(function (err) {
-      //     console.log("Service worker registration failed, error:", err);
-      //   });
-
       navigator.serviceWorker.addEventListener("message", (event) => {
         // console.log("Received a message from service worker:", event.data);
         // // 处理收到的消息
         // alert(`Message from service worker: ${event.data.msg}`);
         setMsg("messaging push");
       });
-
-      // const onUpdateReady = (registration) => {
-      //   registration.onupdatefound = () => {
-      //     const installingWorker = registration.installing;
-      //     if (installingWorker) {
-      //       installingWorker.onstatechange = () => {
-      //         if (installingWorker.state === "installed") {
-      //           if (navigator.serviceWorker.controller) {
-      //             setUpdateAvailable(true); // 新版本可用
-      //           }
-      //         }
-      //       };
-      //     }
-      //   };
-      // };
-
-      // navigator.serviceWorker.ready
-      //   .then((registration) => {
-      //     onUpdateReady(registration);
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error during service worker registration:", error);
-      //   });
-
-      // Register Service Worker if not already registered
-      if (!navigator.serviceWorker.controller) {
-        console.log("navigator.serviceWorker.register");
-        navigator.serviceWorker
-          .register("/sw.js")
-          .then((registration) => {
-            console.log("Registration successful, scope is:", registration.scope);
-          })
-          .catch((error) => {
-            console.error("Error during service worker registration:", error);
-          });
-      }
-
-      // Listen for messages from the service worker
-      // navigator.serviceWorker.addEventListener("message", (event) => {
-      //   if (event.data && event.data.type === "UPDATE_READY") {
-      //     setUpdateAvailable(true);
-      //   }
-      // });
     }
   }, []);
 
